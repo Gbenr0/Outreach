@@ -117,6 +117,45 @@ export interface Lead {
   segments: string[]; // Array of segment IDs
   location?: string;
   lastEngagedAt?: string;
+  businessName?: string;
+  tags?: string[];
+  lastActivityAt?: string;
+  unsubscribed?: boolean;
+}
+
+export interface ContactNote {
+  id: string;
+  contactId: string;
+  content: string;
+  author: string;
+  createdAt: string;
+}
+
+export interface ContactTask {
+  id: string;
+  contactId: string;
+  title: string;
+  dueDate: string;
+  status: 'pending' | 'completed';
+  priority: 'low' | 'medium' | 'high';
+}
+
+export interface ContactAppointment {
+  id: string;
+  contactId: string;
+  title: string;
+  startTime: string;
+  endTime: string;
+  status: 'scheduled' | 'completed' | 'cancelled';
+}
+
+export interface ContactPayment {
+  id: string;
+  contactId: string;
+  amount: number;
+  status: 'paid' | 'pending' | 'failed';
+  date: string;
+  description: string;
 }
 
 export interface Message {

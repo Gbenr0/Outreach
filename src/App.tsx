@@ -13,6 +13,9 @@ import { Conversations } from './components/Conversations';
 import { AIAssistant } from './components/AIAssistant';
 import { Analytics } from './components/Analytics';
 import { Automation } from './components/Automation';
+import { Survey } from './components/Survey';
+import { Reputation } from './components/Reputation';
+import { Settings } from './components/Settings';
 import { Client } from './types';
 import { 
   MOCK_CLIENTS, 
@@ -259,6 +262,10 @@ export default function App() {
               data={MOCK_MARKETPLACE}
             />
           );
+        case 'settings':
+          return (
+            <Settings activeClient={null} />
+          );
         default:
           return (
             <MasterDashboard 
@@ -348,6 +355,10 @@ export default function App() {
             setView={setCampaignView}
           />
         );
+      case 'survey':
+        return (
+          <Survey activeClient={activeClient} />
+        );
       case 'automation':
         return (
           <Automation 
@@ -376,11 +387,8 @@ export default function App() {
         );
       case 'reputation':
         return (
-          <ModuleView 
-            title="Reputation" 
-            icon="Star" 
-            description="Monitor reviews, manage Google Business Profile, and request feedback." 
-            data={MOCK_REPUTATION}
+          <Reputation 
+            activeClient={activeClient} 
           />
         );
       case 'reporting':
@@ -400,6 +408,10 @@ export default function App() {
             description="Extend your workspace with powerful integrations and add-ons." 
             data={MOCK_MARKETPLACE}
           />
+        );
+      case 'settings':
+        return (
+          <Settings activeClient={activeClient} />
         );
       default:
         return (

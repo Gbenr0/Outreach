@@ -6,7 +6,7 @@ import {
   Calendar, 
   Inbox, 
   BarChart3, 
-  Settings, 
+  Settings as SettingsIcon, 
   Plus,
   ChevronDown,
   Search,
@@ -20,7 +20,8 @@ import {
   HardDrive,
   Star,
   ShoppingBag,
-  Store
+  Store,
+  ClipboardList
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { Client } from '../types';
@@ -60,6 +61,7 @@ export function Sidebar({ activeTab, setActiveTab, clients, activeClient, setAct
     { id: 'payments', label: 'Payments', icon: CreditCard },
     { id: 'ai-agents', label: 'AI Agents', icon: Sparkles },
     { id: 'marketing', label: 'Marketing', icon: Megaphone },
+    { id: 'survey', label: 'Survey', icon: ClipboardList },
     { id: 'automation', label: 'Automation', icon: Zap },
     { id: 'membership', label: 'Membership', icon: Award },
     { id: 'media', label: 'Media Storage', icon: HardDrive },
@@ -181,10 +183,15 @@ export function Sidebar({ activeTab, setActiveTab, clients, activeClient, setAct
 
         <div className="mt-auto pt-4 border-t border-slate-100">
           <button 
-            onClick={() => toast.info('Opening platform settings...')}
-            className="sidebar-item w-full flex items-center gap-3 px-3 py-2 text-slate-600 hover:bg-slate-50 rounded-lg transition-all"
+            onClick={() => setActiveTab('settings')}
+            className={cn(
+              "sidebar-item w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all",
+              activeTab === 'settings' 
+                ? "bg-primary/10 text-primary font-semibold shadow-sm" 
+                : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+            )}
           >
-            <Settings size={18} />
+            <SettingsIcon size={18} />
             <span className="text-sm">Settings</span>
           </button>
           <div 

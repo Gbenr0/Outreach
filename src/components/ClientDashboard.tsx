@@ -219,12 +219,15 @@ export function ClientDashboard({ client, setActiveTab, setActiveClient, setCamp
               <h2 className="text-xl font-bold text-slate-900">Service Plan</h2>
             </div>
             
-            <div className="card bg-emerald-900 text-white overflow-hidden relative">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16 blur-2xl" />
+            <div className="card bg-primary text-white overflow-hidden relative" style={{ 
+              backgroundImage: 'radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px)', 
+              backgroundSize: '24px 24px' 
+            }}>
+              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl" />
               <div className="relative space-y-6">
                 <div className="flex items-center justify-between">
-                  <p className="text-emerald-300 text-xs font-bold uppercase tracking-wider">Active Deliverables</p>
-                  <span className="px-2 py-1 bg-emerald-500/20 rounded-lg text-[10px] font-bold border border-emerald-500/30">PREMIUM PLAN</span>
+                  <p className="text-purple-200 text-xs font-bold uppercase tracking-wider">Active Deliverables</p>
+                  <span className="px-2 py-1 bg-white/20 rounded-lg text-[10px] font-bold border border-white/30">PREMIUM PLAN</span>
                 </div>
                 
                 <div className="space-y-4">

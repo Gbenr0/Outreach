@@ -1,4 +1,4 @@
-import { Client, Campaign, Lead, Message, ContentItem, Task, Segment, Blog, SocialPost, PostingPlan } from './types';
+import { Client, Campaign, Lead, Message, ContentItem, Task, Segment, Blog, SocialPost, PostingPlan, ContactNote, ContactTask, ContactAppointment, ContactPayment } from './types';
 
 export const MOCK_CLIENTS: Client[] = [
   {
@@ -209,6 +209,65 @@ export const MOCK_CAMPAIGNS: Campaign[] = [
     leads: 0,
     spend: 200,
     startDate: '2024-04-15',
+  },
+  {
+    id: 'c5',
+    clientId: '1',
+    name: 'Abandoned Cart Recovery',
+    type: 'email',
+    status: 'active',
+    performance: 'high',
+    leads: 156,
+    spend: 300,
+    startDate: '2024-03-20',
+    analytics: {
+      openRate: 45.2,
+      bounceRate: 0.5,
+      unsubscribeRate: 0.1
+    }
+  },
+  {
+    id: 'c6',
+    clientId: '1',
+    name: 'Monthly Newsletter - April',
+    type: 'email',
+    status: 'scheduled',
+    performance: 'stable',
+    leads: 0,
+    spend: 150,
+    startDate: '2024-04-01',
+  },
+  {
+    id: 'c7',
+    clientId: '2',
+    name: 'Review Booster Campaign',
+    type: 'email',
+    status: 'completed',
+    performance: 'high',
+    leads: 320,
+    spend: 400,
+    startDate: '2024-02-15',
+    analytics: {
+      openRate: 38.5,
+      bounceRate: 1.1,
+      unsubscribeRate: 0.3
+    }
+  },
+  {
+    id: 'c8',
+    clientId: '3',
+    name: 'Re-engagement Blast',
+    type: 'email',
+    status: 'paused',
+    performance: 'low',
+    leads: 45,
+    spend: 600,
+    startDate: '2024-03-05',
+    analytics: {
+      openRate: 12.8,
+      bounceRate: 4.2,
+      unsubscribeRate: 2.5
+    }
   }
 ];
 
@@ -230,7 +289,10 @@ export const MOCK_LEADS: Lead[] = [
     avatar: 'https://picsum.photos/seed/sarah/200/200',
     segments: ['s2'],
     location: 'New York, NY',
-    lastEngagedAt: '2024-03-28T10:00:00Z'
+    lastEngagedAt: '2024-03-28T10:00:00Z',
+    businessName: 'Johnson & Co',
+    tags: ['VIP', 'Interested'],
+    lastActivityAt: '2024-03-28T10:15:00Z'
   },
   {
     id: 'l2',
@@ -245,7 +307,10 @@ export const MOCK_LEADS: Lead[] = [
     avatar: 'https://picsum.photos/seed/mike/200/200',
     segments: ['s4'],
     location: 'San Francisco, CA',
-    lastEngagedAt: '2024-03-27T14:30:00Z'
+    lastEngagedAt: '2024-03-27T14:30:00Z',
+    businessName: 'TechNova Solutions',
+    tags: ['SaaS', 'High Intent'],
+    lastActivityAt: '2024-03-27T15:00:00Z'
   },
   {
     id: 'l3',
@@ -260,7 +325,10 @@ export const MOCK_LEADS: Lead[] = [
     avatar: 'https://picsum.photos/seed/emma/200/200',
     segments: ['s3'],
     location: 'Austin, TX',
-    lastEngagedAt: '2024-03-26T11:00:00Z'
+    lastEngagedAt: '2024-03-26T11:00:00Z',
+    businessName: 'Wilson Creative',
+    tags: ['Creative', 'Referral'],
+    lastActivityAt: '2024-03-26T12:00:00Z'
   },
   {
     id: 'l4',
@@ -275,8 +343,29 @@ export const MOCK_LEADS: Lead[] = [
     avatar: 'https://picsum.photos/seed/david/200/200',
     segments: [],
     location: 'Miami, FL',
-    lastEngagedAt: '2024-03-21T10:00:00Z'
+    lastEngagedAt: '2024-03-21T10:00:00Z',
+    businessName: 'Miller Estates',
+    tags: ['Real Estate', 'High Value'],
+    lastActivityAt: '2024-03-21T11:00:00Z'
   }
+];
+
+export const MOCK_CONTACT_NOTES: ContactNote[] = [
+  { id: 'n1', contactId: 'l1', content: 'Interested in the new eco-sneakers.', author: 'Alex Operator', createdAt: '2024-03-28T10:10:00Z' },
+  { id: 'n2', contactId: 'l1', content: 'Follow up next week about size availability.', author: 'Alex Operator', createdAt: '2024-03-28T10:20:00Z' },
+];
+
+export const MOCK_CONTACT_TASKS: ContactTask[] = [
+  { id: 'ct1', contactId: 'l1', title: 'Send size guide', dueDate: '2024-03-29T10:00:00Z', status: 'pending', priority: 'medium' },
+  { id: 'ct2', contactId: 'l2', title: 'Schedule demo', dueDate: '2024-03-30T14:00:00Z', status: 'completed', priority: 'high' },
+];
+
+export const MOCK_CONTACT_APPOINTMENTS: ContactAppointment[] = [
+  { id: 'ca1', contactId: 'l1', title: 'Fitting Session', startTime: '2024-04-05T14:00:00Z', endTime: '2024-04-05T15:00:00Z', status: 'scheduled' },
+];
+
+export const MOCK_CONTACT_PAYMENTS: ContactPayment[] = [
+  { id: 'cp1', contactId: 'l1', amount: 150, status: 'paid', date: '2024-03-28T11:00:00Z', description: 'Eco-Sneakers Pre-order' },
 ];
 
 export const MOCK_TASKS: Task[] = [
@@ -526,3 +615,57 @@ export const MOCK_ADS = [
   { name: 'EcoStride - Instagram Retargeting', description: 'Targeting users who visited the spring collection.', status: 'Running' },
   { name: 'TechNova - LinkedIn Lead Gen', description: 'Targeting SaaS decision makers.', status: 'Paused' }
 ];
+
+export const MOCK_EMAIL_STATS = [
+  { name: 'Mon', delivered: 1150, bounced: 20, unsubscribed: 5, spam: 2 },
+  { name: 'Tue', delivered: 1080, bounced: 15, unsubscribed: 8, spam: 1 },
+  { name: 'Wed', delivered: 1450, bounced: 30, unsubscribed: 12, spam: 3 },
+  { name: 'Thu', delivered: 1250, bounced: 25, unsubscribed: 10, spam: 2 },
+  { name: 'Fri', delivered: 1180, bounced: 18, unsubscribed: 7, spam: 1 },
+  { name: 'Sat', delivered: 980, bounced: 12, unsubscribed: 4, spam: 0 },
+  { name: 'Sun', delivered: 1050, bounced: 22, unsubscribed: 9, spam: 2 },
+];
+
+export const MOCK_EMAIL_TEMPLATES = [
+  { id: 't1', name: 'Welcome Series', description: 'Automated welcome email for new subscribers.', lastUsed: '2024-04-01', thumbnail: 'https://picsum.photos/seed/welcome/400/600' },
+  { id: 't2', name: 'Monthly Newsletter', description: 'Standard layout for monthly updates.', lastUsed: '2024-03-25', thumbnail: 'https://picsum.photos/seed/newsletter/400/600' },
+  { id: 't3', name: 'Flash Sale Promo', description: 'High-conversion layout for limited time offers.', lastUsed: '2024-03-15', thumbnail: 'https://picsum.photos/seed/sale/400/600' },
+  { id: 't4', name: 'Abandoned Cart', description: 'Recovery email for incomplete purchases.', lastUsed: '2024-04-05', thumbnail: 'https://picsum.photos/seed/cart/400/600' },
+  { id: 't5', name: 'Review Request', description: 'Follow-up email to collect customer reviews.', lastUsed: '2024-04-02', thumbnail: 'https://picsum.photos/seed/review/400/600' },
+  { id: 't6', name: 'Product Update', description: 'Clean layout for feature announcements.', lastUsed: '2024-03-20', thumbnail: 'https://picsum.photos/seed/update/400/600' },
+];
+
+export const MOCK_ENGAGEMENT_DATA = [
+  { name: 'Delivered', email: 10500, workflow: 8200, bulk: 6300 },
+  { name: 'Opened', email: 4483, workflow: 423, bulk: 5722 },
+  { name: 'Clicked', email: 1200, workflow: 150, bulk: 2100 },
+  { name: 'Ordered', email: 450, workflow: 20, bulk: 85 },
+];
+
+export const MOCK_ADS_REPORTS = {
+  google: [
+    { name: 'Mon', impressions: 4500, clicks: 280, conversions: 12, spend: 150, cpc: 0.54, costPerConv: 12.5, spendPerConv: 12.5, convRate: 4.2 },
+    { name: 'Tue', impressions: 5200, clicks: 310, conversions: 15, spend: 180, cpc: 0.58, costPerConv: 12.0, spendPerConv: 12.0, convRate: 4.8 },
+    { name: 'Wed', impressions: 4800, clicks: 290, conversions: 10, spend: 160, cpc: 0.55, costPerConv: 16.0, spendPerConv: 16.0, convRate: 3.4 },
+    { name: 'Thu', impressions: 6100, clicks: 420, conversions: 22, spend: 210, cpc: 0.50, costPerConv: 9.5, spendPerConv: 9.5, convRate: 5.2 },
+    { name: 'Fri', impressions: 5800, clicks: 380, conversions: 18, spend: 195, cpc: 0.51, costPerConv: 10.8, spendPerConv: 10.8, convRate: 4.7 },
+    { name: 'Sat', impressions: 3200, clicks: 150, conversions: 5, spend: 90, cpc: 0.60, costPerConv: 18.0, spendPerConv: 18.0, convRate: 3.3 },
+    { name: 'Sun', impressions: 3800, clicks: 190, conversions: 8, spend: 110, cpc: 0.58, costPerConv: 13.7, spendPerConv: 13.7, convRate: 4.2 },
+  ],
+  facebook: [
+    { name: 'Mon', impressions: 8500, clicks: 480, conversions: 22, spend: 120, cpc: 0.25, costPerConv: 5.4, spendPerConv: 5.4, convRate: 4.5 },
+    { name: 'Tue', impressions: 9200, clicks: 510, conversions: 25, spend: 140, cpc: 0.27, costPerConv: 5.6, spendPerConv: 5.6, convRate: 4.9 },
+    { name: 'Wed', impressions: 8800, clicks: 490, conversions: 20, spend: 130, cpc: 0.26, costPerConv: 6.5, spendPerConv: 6.5, convRate: 4.1 },
+    { name: 'Thu', impressions: 10100, clicks: 620, conversions: 32, spend: 160, cpc: 0.25, costPerConv: 5.0, spendPerConv: 5.0, convRate: 5.1 },
+    { name: 'Fri', impressions: 9800, clicks: 580, conversions: 28, spend: 155, cpc: 0.26, costPerConv: 5.5, spendPerConv: 5.5, convRate: 4.8 },
+    { name: 'Sat', impressions: 6200, clicks: 250, conversions: 15, spend: 80, cpc: 0.32, costPerConv: 5.3, spendPerConv: 5.3, convRate: 6.0 },
+    { name: 'Sun', impressions: 7800, clicks: 390, conversions: 18, spend: 100, cpc: 0.25, costPerConv: 5.5, spendPerConv: 5.5, convRate: 4.6 },
+  ],
+  campaigns: [
+    { id: 'c1', name: 'Spring Sale 2024', status: 'Active', clicks: 1240, cost: 450, revenue: 1200, roi: 2.6, cpc: 0.36, ctr: 2.4, sales: 45, cps: 10.0, leads: 120, cpl: 3.75, impressions: 52000, avgRevenue: 26.6 },
+    { id: 'c2', name: 'New Arrivals Retargeting', status: 'Active', clicks: 850, cost: 320, revenue: 950, roi: 2.9, cpc: 0.38, ctr: 3.1, sales: 32, cps: 10.0, leads: 85, cpl: 3.76, impressions: 27400, avgRevenue: 29.6 },
+    { id: 'c3', name: 'Brand Awareness - Video', status: 'Paused', clicks: 2100, cost: 150, revenue: 0, roi: 0, cpc: 0.07, ctr: 1.2, sales: 0, cps: 0, leads: 45, cpl: 3.33, impressions: 175000, avgRevenue: 0 },
+    { id: 'c4', name: 'Competitor Conquesting', status: 'Active', clicks: 450, cost: 600, revenue: 800, roi: 1.3, cpc: 1.33, ctr: 0.8, sales: 12, cps: 50.0, leads: 30, cpl: 20.0, impressions: 56000, avgRevenue: 66.6 },
+    { id: 'c5', name: 'Holiday Gift Guide', status: 'Completed', clicks: 3200, cost: 1200, revenue: 4500, roi: 3.7, cpc: 0.37, ctr: 2.8, sales: 150, cps: 8.0, leads: 450, cpl: 2.66, impressions: 114000, avgRevenue: 30.0 },
+  ]
+};

@@ -16,7 +16,8 @@ import {
   MousePointer2,
   MapPin,
   ExternalLink,
-  Info
+  Info,
+  DollarSign
 } from 'lucide-react';
 import { 
   BarChart, 
@@ -30,11 +31,15 @@ import {
   Line,
   Cell,
   PieChart,
-  Pie
+  Pie,
+  AreaChart,
+  Area,
+  Legend
 } from 'recharts';
 import { Client } from '../types';
 import { toast } from 'sonner';
 import { cn } from '../lib/utils';
+import { MOCK_ADS_REPORTS } from '../mockData';
 
 interface AnalyticsProps {
   activeClient: Client | null;
@@ -53,6 +58,178 @@ const data = [
 ];
 
 const COLORS = ['#7c3aed', '#0d9488', '#3b82f6', '#f59e0b', '#ef4444'];
+
+function AdsReport({ platform, data, campaigns }: { platform: 'google' | 'facebook', data: any[], campaigns: any[] }) {
+  const platformName = platform === 'google' ? 'Google Ads' : 'Facebook Ads';
+
+  return (
+    <div className="space-y-8 animate-in fade-in duration-500">
+      {/* Summary Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        {[
+          { label: 'Impressions', value: data.reduce((acc, d) => acc + d.impressions, 0).toLocaleString(), icon: Globe, color: 'text-blue-600', bg: 'bg-blue-50' },
+          { label: 'Clicks', value: data.reduce((acc, d) => acc + d.clicks, 0).toLocaleString(), icon: MousePointer2, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+          { label: 'Conversions', value: data.reduce((acc, d) => acc + d.conversions, 0).toLocaleString(), icon: TrendingUp, color: 'text-purple-600', bg: 'bg-purple-50' },
+          { label: 'Client Spends', value: `$${data.reduce((acc, d) => acc + d.spend, 0).toLocaleString()}`, icon: DollarSign, color: 'text-amber-600', bg: 'bg-amber-50' },
+        ].map((stat, i) => (
+          <div key={i} className="card bg-white p-6">
+            <div className="flex justify-between items-start mb-4">
+              <div className={cn(stat.bg, "p-2 rounded-lg", stat.color)}>
+                <stat.icon size={20} />
+              </div>
+            </div>
+            <div className="text-2xl font-bold text-slate-900">{stat.value}</div>
+            <div className="text-sm font-medium text-slate-500">{stat.label}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Charts Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Impressions & Clicks */}
+        <div className="card bg-white p-6">
+          <h4 className="font-bold text-slate-800 mb-6">Impressions & Clicks</h4>
+          <div className="h-[300px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={data}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#64748b' }} />
+                <YAxis yAxisId="left" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#64748b' }} />
+                <YAxis yAxisId="right" orientation="right" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#64748b' }} />
+                <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }} />
+                <Legend />
+                <Line yAxisId="left" type="monotone" dataKey="impressions" stroke="#6366f1" strokeWidth={2} dot={{ r: 4 }} activeDot={{ r: 6 }} />
+                <Line yAxisId="right" type="monotone" dataKey="clicks" stroke="#10b981" strokeWidth={2} dot={{ r: 4 }} activeDot={{ r: 6 }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Conversions & Spend */}
+        <div className="card bg-white p-6">
+          <h4 className="font-bold text-slate-800 mb-6">Conversions & Spend</h4>
+          <div className="h-[300px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={data}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#64748b' }} />
+                <YAxis yAxisId="left" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#64748b' }} />
+                <YAxis yAxisId="right" orientation="right" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#64748b' }} />
+                <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }} />
+                <Legend />
+                <Bar yAxisId="left" dataKey="conversions" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
+                <Bar yAxisId="right" dataKey="spend" fill="#f59e0b" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Efficiency Metrics */}
+        <div className="card bg-white p-6">
+          <h4 className="font-bold text-slate-800 mb-6">Efficiency Metrics (CPC & Cost/Conv)</h4>
+          <div className="h-[300px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={data}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#64748b' }} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#64748b' }} />
+                <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }} />
+                <Legend />
+                <Line type="monotone" dataKey="cpc" stroke="#ef4444" strokeWidth={2} />
+                <Line type="monotone" dataKey="costPerConv" stroke="#06b6d4" strokeWidth={2} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Conversion Rate */}
+        <div className="card bg-white p-6">
+          <h4 className="font-bold text-slate-800 mb-6">Conversion Rate (%)</h4>
+          <div className="h-[300px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={data}>
+                <defs>
+                  <linearGradient id="colorConv" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#ec4899" stopOpacity={0.1}/>
+                    <stop offset="95%" stopColor="#ec4899" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#64748b' }} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#64748b' }} />
+                <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }} />
+                <Area type="monotone" dataKey="convRate" stroke="#ec4899" fillOpacity={1} fill="url(#colorConv)" strokeWidth={2} />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      </div>
+
+      {/* Campaign Table */}
+      <div className="card bg-white overflow-hidden">
+        <div className="p-6 border-b border-slate-100 flex justify-between items-center">
+          <h4 className="font-bold text-slate-800">{platformName} Campaigns</h4>
+          <button className="text-primary text-sm font-bold flex items-center gap-2 hover:underline">
+            <Download size={16} /> Export CSV
+          </button>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left">
+            <thead>
+              <tr className="bg-slate-50 border-b border-slate-100">
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Campaign</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Clicks</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Cost</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Revenue</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">ROI</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">CPC</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">CTR</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Sales</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">CPS</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Leads</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">CPL</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Impressions</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Avg. Revenue</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {campaigns.map((campaign) => (
+                <tr key={campaign.id} className="hover:bg-slate-50 transition-colors">
+                  <td className="px-6 py-4">
+                    <button className="text-sm font-bold text-primary hover:underline text-left">
+                      {campaign.name}
+                    </button>
+                  </td>
+                  <td className="px-6 py-4">
+                    <span className={cn(
+                      "px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider",
+                      campaign.status === 'Active' ? "bg-emerald-50 text-emerald-600" : "bg-slate-100 text-slate-500"
+                    )}>
+                      {campaign.status}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 text-sm text-slate-600 text-right font-medium">{campaign.clicks.toLocaleString()}</td>
+                  <td className="px-6 py-4 text-sm text-slate-600 text-right font-medium">${campaign.cost.toLocaleString()}</td>
+                  <td className="px-6 py-4 text-sm text-slate-600 text-right font-medium">${campaign.revenue.toLocaleString()}</td>
+                  <td className="px-6 py-4 text-sm text-slate-600 text-right font-medium">{campaign.roi}x</td>
+                  <td className="px-6 py-4 text-sm text-slate-600 text-right font-medium">${campaign.cpc}</td>
+                  <td className="px-6 py-4 text-sm text-slate-600 text-right font-medium">{campaign.ctr}%</td>
+                  <td className="px-6 py-4 text-sm text-slate-600 text-right font-medium">{campaign.sales}</td>
+                  <td className="px-6 py-4 text-sm text-slate-600 text-right font-medium">${campaign.cps}</td>
+                  <td className="px-6 py-4 text-sm text-slate-600 text-right font-medium">{campaign.leads}</td>
+                  <td className="px-6 py-4 text-sm text-slate-600 text-right font-medium">${campaign.cpl}</td>
+                  <td className="px-6 py-4 text-sm text-slate-600 text-right font-medium">{campaign.impressions.toLocaleString()}</td>
+                  <td className="px-6 py-4 text-sm text-slate-600 text-right font-medium">${campaign.avgRevenue}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function ReportPlaceholder({ title, description, icon: Icon }: { title: string, description: string, icon: any }) {
   return (
@@ -75,6 +252,7 @@ export function Analytics({ activeClient, setActiveTab, setActiveClient, setCamp
 
   const reportTabs = [
     { id: 'google-ads', label: 'Google Ads Report', icon: Search },
+    { id: 'facebook-ads', label: 'Facebook Ads Report', icon: Globe },
     { id: 'attribution', label: 'Attribution Report', icon: MousePointer2 },
     { id: 'call', label: 'Call Report', icon: Phone },
     { id: 'appointment', label: 'Appointment Report', icon: Calendar },
@@ -84,72 +262,9 @@ export function Analytics({ activeClient, setActiveTab, setActiveClient, setCamp
   const renderReportContent = () => {
     switch (activeReportTab) {
       case 'google-ads':
-        return (
-          <div className="space-y-8 animate-in fade-in duration-500">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              {[
-                { label: 'Total Spend', value: '$1,240.50', change: '+12%', icon: Search, color: 'text-blue-600', bg: 'bg-blue-50' },
-                { label: 'Impressions', value: '45.2k', change: '+8%', icon: Globe, color: 'text-emerald-600', bg: 'bg-emerald-50' },
-                { label: 'Clicks', value: '2,840', change: '+15%', icon: MousePointer2, color: 'text-purple-600', bg: 'bg-purple-50' },
-                { label: 'Avg. CPC', value: '$0.44', change: '-5%', icon: TrendingUp, color: 'text-amber-600', bg: 'bg-amber-50' },
-              ].map((stat, i) => (
-                <div key={i} className="card bg-white p-6">
-                  <div className="flex justify-between items-start mb-4">
-                    <div className={stat.bg + " p-2 rounded-lg " + stat.color}>
-                      < stat.icon size={20} />
-                    </div>
-                    <div className="text-emerald-600 text-xs font-bold flex items-center">
-                      <ArrowUpRight size={14} className="mr-1" />
-                      {stat.change}
-                    </div>
-                  </div>
-                  <p className="text-slate-500 text-sm font-medium">{stat.label}</p>
-                  <h4 className="text-2xl font-bold mt-1">{stat.value}</h4>
-                </div>
-              ))}
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <div className="card bg-white">
-                <h3 className="font-bold text-lg mb-6">Spend vs Conversions</h3>
-                <div className="h-[300px] w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={data}>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                      <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fontSize: 12, fill: '#64748b'}} />
-                      <YAxis axisLine={false} tickLine={false} tick={{fontSize: 12, fill: '#64748b'}} />
-                      <Tooltip />
-                      <Line type="monotone" dataKey="value" stroke="#3b82f6" strokeWidth={3} dot={{ r: 4, fill: '#3b82f6' }} activeDot={{ r: 6 }} />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-
-              <div className="card bg-white">
-                <h3 className="font-bold text-lg mb-6">Top Performing Keywords</h3>
-                <div className="space-y-4">
-                  {[
-                    { keyword: 'sustainable fashion', clicks: 840, ctr: '4.2%', spend: '$340' },
-                    { keyword: 'eco friendly clothes', clicks: 620, ctr: '3.8%', spend: '$280' },
-                    { keyword: 'organic cotton tees', clicks: 450, ctr: '3.1%', spend: '$190' },
-                    { keyword: 'ethical clothing brand', clicks: 380, ctr: '2.9%', spend: '$150' },
-                  ].map((kw, i) => (
-                    <div key={i} className="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
-                      <div>
-                        <p className="font-bold text-slate-900">{kw.keyword}</p>
-                        <p className="text-xs text-slate-500">{kw.clicks} clicks • {kw.ctr} CTR</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-bold text-slate-900">{kw.spend}</p>
-                        <p className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Spend</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        );
+        return <AdsReport platform="google" data={MOCK_ADS_REPORTS.google} campaigns={MOCK_ADS_REPORTS.campaigns} />;
+      case 'facebook-ads':
+        return <AdsReport platform="facebook" data={MOCK_ADS_REPORTS.facebook} campaigns={MOCK_ADS_REPORTS.campaigns} />;
       case 'attribution':
         return <ReportPlaceholder title="Attribution Report" icon={MousePointer2} description="Track the complete customer journey and understand which touchpoints drive the most value." />;
       case 'call':

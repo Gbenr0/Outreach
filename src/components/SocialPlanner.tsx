@@ -19,7 +19,13 @@ import {
   ChevronLeft, 
   ChevronRight,
   X,
-  Layout
+  Layout,
+  Upload,
+  RefreshCw,
+  Repeat,
+  Rss,
+  FileSpreadsheet,
+  Wand2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
@@ -52,6 +58,8 @@ export function SocialPlanner({ client }: SocialPlannerProps) {
   const [isAiGenerating, setIsAiGenerating] = useState(false);
   const [aiPrompt, setAiPrompt] = useState('');
   const [generatedCaption, setGeneratedCaption] = useState('');
+  const [generatedImage, setGeneratedImage] = useState('');
+  const [aiMode, setAiMode] = useState<'caption' | 'media'>('caption');
   
   const postingPlan = MOCK_POSTING_PLANS.find(p => p.clientId === client.id);
   const [isEditingPlan, setIsEditingPlan] = useState(false);
@@ -107,12 +115,20 @@ export function SocialPlanner({ client }: SocialPlannerProps) {
     setIsAiGenerating(true);
     // Simulate AI generation
     setTimeout(() => {
-      const variations = [
-        `✨ Big news! We're launching our new collection today. Get ready to elevate your style with our latest designs. Shop now! 🛍️\n\n#NewArrivals #StyleInspo #Fashion`,
-        `🌿 Sustainability meets style. Discover our newest eco-friendly pieces designed for the conscious shopper. 🌎\n\n#EcoFriendly #SustainableFashion #GreenLiving`,
-        `Ready for a refresh? Our latest drop is here to help you look and feel your best. Limited stock available! ⚡\n\n#StyleRefresh #MustHave #LimitedEdition`
-      ];
-      setGeneratedCaption(variations[Math.floor(Math.random() * variations.length)]);
+      if (aiMode === 'caption') {
+        const variations = [
+          `✨ Big news! We're launching our new collection today. Get ready to elevate your style with our latest designs. Shop now! 🛍️\n\n#NewArrivals #StyleInspo #Fashion`,
+          `🌿 Sustainability meets style. Discover our newest eco-friendly pieces designed for the conscious shopper. 🌎\n\n#EcoFriendly #SustainableFashion #GreenLiving`,
+          `Ready for a refresh? Our latest drop is here to help you look and feel your best. Limited stock available! ⚡\n\n#StyleRefresh #MustHave #LimitedEdition`
+        ];
+        setGeneratedCaption(variations[Math.floor(Math.random() * variations.length)]);
+      } else {
+        // Media mode
+        const imageSeeds = ['fashion', 'business', 'tech', 'nature', 'food'];
+        const seed = imageSeeds[Math.floor(Math.random() * imageSeeds.length)];
+        setGeneratedImage(`https://picsum.photos/seed/${seed}/800/800`);
+        setGeneratedCaption(`Check out our latest update! 🚀 Designed to help you achieve more. #Innovation #Growth #Success`);
+      }
       setIsAiGenerating(false);
     }, 1500);
   };
@@ -260,6 +276,7 @@ export function SocialPlanner({ client }: SocialPlannerProps) {
           </select>
           <button 
             onClick={() => {
+              setAiMode('caption');
               setNewPost({ ...newPost, status: 'draft' });
               setShowCreateModal(true);
             }}
@@ -276,6 +293,30 @@ export function SocialPlanner({ client }: SocialPlannerProps) {
             Create Post
           </button>
         </div>
+      </div>
+
+      {/* Quick Action Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {[
+          { id: 'bulk', title: 'Bulk Scheduling', desc: 'Upload CSV to schedule posts', icon: FileSpreadsheet, color: 'bg-blue-50 text-blue-600' },
+          { id: 'evergreen', title: 'Evergreen Posts', desc: 'Create reusable content', icon: RefreshCw, color: 'bg-emerald-50 text-emerald-600' },
+          { id: 'recurring', title: 'Recurring Posts', desc: 'Schedule repeating updates', icon: Repeat, color: 'bg-amber-50 text-amber-600' },
+          { id: 'rss', title: 'RSS to Feed', desc: 'Generate posts from RSS', icon: Rss, color: 'bg-rose-50 text-rose-600' },
+        ].map((action) => (
+          <button 
+            key={action.id}
+            onClick={() => toast.info(`Opening ${action.title} tool...`)}
+            className="flex items-start gap-4 p-5 bg-white rounded-2xl border border-slate-200 hover:border-primary hover:shadow-md transition-all text-left group"
+          >
+            <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${action.color} group-hover:scale-110 transition-transform`}>
+              <action.icon size={24} />
+            </div>
+            <div>
+              <h3 className="font-bold text-slate-800">{action.title}</h3>
+              <p className="text-xs text-slate-500 mt-1">{action.desc}</p>
+            </div>
+          </button>
+        ))}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -435,31 +476,60 @@ export function SocialPlanner({ client }: SocialPlannerProps) {
                 <div className="space-y-6">
                   {/* AI Section */}
                   <div className="p-5 bg-purple-50 rounded-2xl border border-purple-100">
-                    <div className="flex items-center gap-2 text-primary font-bold text-sm mb-3">
-                      <Sparkles size={18} />
-                      Generate Caption with AI
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-2 text-primary font-bold text-sm">
+                        <Sparkles size={18} />
+                        AI Content Assistant
+                      </div>
+                      <div className="flex bg-white p-1 rounded-lg border border-purple-100">
+                        <button 
+                          onClick={() => setAiMode('caption')}
+                          className={`px-3 py-1 text-[10px] font-bold rounded-md transition-all ${aiMode === 'caption' ? 'bg-primary text-white' : 'text-slate-500 hover:bg-slate-50'}`}
+                        >
+                          Caption Only
+                        </button>
+                        <button 
+                          onClick={() => setAiMode('media')}
+                          className={`px-3 py-1 text-[10px] font-bold rounded-md transition-all ${aiMode === 'media' ? 'bg-primary text-white' : 'text-slate-500 hover:bg-slate-50'}`}
+                        >
+                          Media + Caption
+                        </button>
+                      </div>
                     </div>
+                    
                     <div className="space-y-3">
-                      <p className="text-xs text-slate-500">What do you want to promote?</p>
+                      <p className="text-xs text-slate-500">
+                        {aiMode === 'caption' ? 'What do you want to promote?' : 'Describe the image and post topic'}
+                      </p>
                       <div className="flex gap-2">
                         <input 
                           type="text" 
                           value={aiPrompt}
                           onChange={(e) => setAiPrompt(e.target.value)}
-                          placeholder="e.g. New spring collection sneakers..."
+                          placeholder={aiMode === 'caption' ? 'e.g. New spring collection sneakers...' : 'e.g. Gym promotion for new members...'}
                           className="flex-1 px-4 py-2 bg-white border border-purple-200 rounded-xl text-sm focus:ring-2 focus:ring-primary/20 outline-none"
                         />
                         <button 
                           onClick={handleAiGenerate}
                           disabled={isAiGenerating}
-                          className="px-4 py-2 bg-primary text-white rounded-xl text-sm font-bold hover:bg-primary/90 transition-all disabled:opacity-50"
+                          className="px-4 py-2 bg-primary text-white rounded-xl text-sm font-bold hover:bg-primary/90 transition-all disabled:opacity-50 flex items-center gap-2"
                         >
+                          {isAiGenerating ? (
+                            <RefreshCw size={16} className="animate-spin" />
+                          ) : (
+                            <Wand2 size={16} />
+                          )}
                           {isAiGenerating ? 'Generating...' : 'Generate'}
                         </button>
                       </div>
                       
-                      {generatedCaption && (
+                      {(generatedCaption || generatedImage) && (
                         <div className="mt-4 p-4 bg-white rounded-xl border border-purple-100 animate-in slide-in-from-top-2">
+                          {generatedImage && (
+                            <div className="mb-4 aspect-video rounded-lg overflow-hidden border border-slate-100">
+                              <img src={generatedImage} alt="AI Generated" className="w-full h-full object-cover" />
+                            </div>
+                          )}
                           <p className="text-sm text-slate-700 whitespace-pre-wrap">{generatedCaption}</p>
                           <div className="flex justify-end gap-2 mt-3">
                             <button 
@@ -470,8 +540,13 @@ export function SocialPlanner({ client }: SocialPlannerProps) {
                             </button>
                             <button 
                               onClick={() => {
-                                setNewPost({ ...newPost, caption: generatedCaption });
+                                setNewPost({ 
+                                  ...newPost, 
+                                  caption: generatedCaption,
+                                  mediaUrl: generatedImage || newPost.mediaUrl
+                                });
                                 setGeneratedCaption('');
+                                setGeneratedImage('');
                               }}
                               className="text-[10px] font-bold text-primary flex items-center gap-1"
                             >
