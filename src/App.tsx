@@ -262,6 +262,17 @@ export default function App() {
               data={MOCK_MARKETPLACE}
             />
           );
+        case 'marketing':
+          return (
+            <CampaignEngine 
+              clients={clients}
+              activeClient={null} 
+              setActiveTab={setActiveTab} 
+              setActiveClient={setActiveClient} 
+              view={campaignView}
+              setView={setCampaignView}
+            />
+          );
         case 'settings':
           return (
             <Settings activeClient={null} />
