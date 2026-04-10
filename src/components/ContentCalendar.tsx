@@ -326,17 +326,17 @@ export function ContentCalendar({ clients, activeClient, setActiveTab, setActive
                 </div>
               </div>
 
-              <div className="card bg-slate-900 text-white">
+              <div className="card bg-primary text-white">
                 <h3 className="font-bold text-sm mb-4 flex items-center gap-2">
-                  <Sparkles size={16} className="text-amber-400" />
+                  <Sparkles size={16} className="text-white opacity-80" />
                   Best Time to Post
                 </h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
+                <p className="text-xs text-purple-100 leading-relaxed">
                   Based on your audience activity, the best time to post tomorrow is <span className="text-white font-bold">6:45 PM</span>.
                 </p>
                 <button 
                   onClick={() => toast.success('Time optimized!')}
-                  className="w-full mt-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-xs font-bold transition-colors"
+                  className="w-full mt-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg text-xs font-bold transition-colors border border-white/20"
                 >
                   Apply Optimal Time
                 </button>

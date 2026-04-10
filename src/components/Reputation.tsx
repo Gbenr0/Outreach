@@ -105,12 +105,12 @@ export function Reputation({ activeClient }: ReputationProps) {
             { label: 'Generate Review Link', status: 'completed' },
             { label: 'Setup SMS Template', status: 'pending' },
           ].map((item, i) => (
-            <div key={i} className="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-100">
-              <span className="text-sm font-medium text-slate-700">{item.label}</span>
+            <div key={i} className="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-100 group hover:border-primary/30 transition-all cursor-pointer">
+              <span className="text-sm font-medium text-slate-700 group-hover:text-primary transition-colors">{item.label}</span>
               {item.status === 'completed' ? (
                 <CheckCircle2 size={18} className="text-emerald-500" />
               ) : (
-                <div className="w-4 h-4 rounded-full border-2 border-slate-300" />
+                <Plus size={18} className="text-primary animate-pulse" />
               )}
             </div>
           ))}
@@ -127,12 +127,12 @@ export function Reputation({ activeClient }: ReputationProps) {
                 <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Invite Goals</p>
                 <h4 className="text-2xl font-bold text-slate-900">124 / 200</h4>
               </div>
-              <div className="p-2 bg-blue-50 text-blue-600 rounded-lg">
+              <div className="p-2 bg-purple-50 text-primary rounded-lg">
                 <Send size={18} />
               </div>
             </div>
             <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
-              <div className="h-full bg-blue-500 rounded-full" style={{ width: '62%' }} />
+              <div className="h-full bg-primary rounded-full" style={{ width: '62%' }} />
             </div>
             <p className="text-[10px] text-slate-500 font-medium">62% of monthly goal reached</p>
           </div>
@@ -316,7 +316,7 @@ export function Reputation({ activeClient }: ReputationProps) {
                 <span className={cn(
                   "px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider",
                   req.status === 'Clicked' ? "bg-emerald-100 text-emerald-700" : 
-                  req.status === 'Opened' ? "bg-blue-100 text-blue-700" : "bg-slate-100 text-slate-500"
+                  req.status === 'Opened' ? "bg-purple-100 text-primary" : "bg-slate-100 text-slate-500"
                 )}>
                   {req.status}
                 </span>
@@ -489,7 +489,7 @@ export function Reputation({ activeClient }: ReputationProps) {
       {/* Send Review Request Modal */}
       <AnimatePresence>
         {showSendModal && (
-          <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+          <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-primary/20 backdrop-blur-sm">
             <motion.div 
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}

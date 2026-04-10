@@ -65,12 +65,14 @@ export function MasterDashboard({ clients, setActiveTab, setActiveClient, setCam
           </button>
           <button 
             onClick={() => {
-              setActiveTab('subaccounts');
-              toast.info('Opening sub-accounts management...');
+              setActiveClient(null);
+              setCampaignView('create');
+              setActiveTab('marketing');
             }}
-            className="btn-primary px-6 py-3 shadow-lg shadow-primary/20"
+            className="btn-primary px-6 py-3"
           >
-            Manage Accounts
+            <Plus size={18} />
+            Launch Campaign
           </button>
         </div>
       </div>
@@ -275,9 +277,9 @@ export function MasterDashboard({ clients, setActiveTab, setActiveClient, setCam
 
 function StatCard({ title, value, change, isPositive, icon: Icon, color }: any) {
   const colors = {
-    blue: "bg-blue-50 text-blue-600 border-blue-100",
+    blue: "bg-primary/5 text-primary border-primary/10",
     emerald: "bg-emerald-50 text-emerald-600 border-emerald-100",
-    purple: "bg-purple-50 text-primary border-purple-100",
+    purple: "bg-primary/10 text-primary border-primary/20",
     amber: "bg-amber-50 text-amber-600 border-amber-100"
   };
 

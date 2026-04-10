@@ -502,7 +502,7 @@ export function CRM({ clients, activeClient, setActiveTab, setActiveClient, setC
       {/* Import Modal */}
       <AnimatePresence>
         {showImportModal && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-primary/20 backdrop-blur-sm">
             <motion.div 
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -635,7 +635,7 @@ export function CRM({ clients, activeClient, setActiveTab, setActiveClient, setC
                     </div>
                     <button 
                       onClick={resetImport}
-                      className="w-full py-4 bg-slate-900 text-white rounded-2xl font-bold hover:bg-slate-800 transition-all"
+                      className="w-full py-4 bg-primary text-white rounded-2xl font-bold hover:bg-primary/90 transition-all shadow-lg shadow-primary/20"
                     >
                       Done
                     </button>
@@ -650,7 +650,7 @@ export function CRM({ clients, activeClient, setActiveTab, setActiveClient, setC
       {/* Add Contact Modal */}
       <AnimatePresence>
         {showAddModal && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-primary/20 backdrop-blur-sm">
             <motion.div 
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -1109,15 +1109,18 @@ function ContactDetails({ contact, onBack }: { contact: Lead, onBack: () => void
             </div>
           </div>
 
-          <div className="card bg-slate-900 text-white p-6 space-y-4">
-            <div className="flex items-center gap-2 text-primary">
+          <div className="card bg-primary text-white p-6 space-y-4 relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-4 opacity-10">
+              <Sparkles size={40} />
+            </div>
+            <div className="flex items-center gap-2 text-white relative z-10">
               <Sparkles size={18} />
               <span className="text-xs font-bold uppercase tracking-wider">AI Insights</span>
             </div>
-            <p className="text-sm text-slate-300 leading-relaxed">
+            <p className="text-sm text-purple-100 leading-relaxed relative z-10">
               {contact.name} is showing high engagement with your latest email campaign. We recommend sending a personalized proposal within the next 24 hours.
             </p>
-            <button className="w-full py-2 bg-primary text-white rounded-lg text-xs font-bold hover:bg-primary/90 transition-all">
+            <button className="w-full py-2 bg-white text-primary rounded-lg text-xs font-bold hover:bg-purple-50 transition-all relative z-10 shadow-lg shadow-black/5">
               Generate Proposal
             </button>
           </div>

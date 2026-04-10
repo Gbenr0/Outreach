@@ -24,7 +24,7 @@
   }
   
   .btn-primary {
-    @apply bg-primary text-white px-4 py-2 rounded-lg font-medium transition-all hover:opacity-90 active:scale-95 disabled:opacity-50;
+    @apply bg-primary text-white px-4 py-2 rounded-xl font-bold transition-all hover:opacity-90 hover:scale-[1.02] active:scale-95 disabled:opacity-50 shadow-lg shadow-primary/20 flex items-center justify-center gap-2;
   }
 
   .sidebar-item {

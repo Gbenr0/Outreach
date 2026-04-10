@@ -85,9 +85,9 @@ export function ClientDashboard({ client, setActiveTab, setActiveClient, setCamp
           <button 
             onClick={() => {
               setCampaignView('create');
-              setActiveTab('campaigns');
+              setActiveTab('marketing');
             }}
-            className="btn-primary px-6 py-2.5 flex items-center gap-2 shadow-lg shadow-primary/20"
+            className="btn-primary px-6 py-2.5"
           >
             <Plus size={18} />
             New Campaign
@@ -160,7 +160,7 @@ export function ClientDashboard({ client, setActiveTab, setActiveClient, setCamp
           {/* Schedule & Contact */}
           <section className="space-y-4">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center">
+              <div className="w-8 h-8 bg-primary/10 text-primary rounded-xl flex items-center justify-center">
                 <Calendar size={18} />
               </div>
               <h2 className="text-xl font-bold text-slate-900">Client Schedule</h2>
@@ -169,7 +169,7 @@ export function ClientDashboard({ client, setActiveTab, setActiveClient, setCamp
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="card bg-white border-slate-100">
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center shadow-sm">
+                  <div className="w-12 h-12 bg-primary/10 text-primary rounded-2xl flex items-center justify-center shadow-sm">
                     <Phone size={24} />
                   </div>
                   <div>
@@ -184,7 +184,7 @@ export function ClientDashboard({ client, setActiveTab, setActiveClient, setCamp
                     <span className="text-sm font-medium text-slate-600">Preferred Time</span>
                     <span className="text-sm font-bold text-slate-900">{client.schedule?.preferredContactTime || 'TBD'}</span>
                   </div>
-                  <button className="w-full py-3 bg-blue-600 text-white rounded-xl font-bold text-sm hover:bg-blue-700 transition-all shadow-lg shadow-blue-200">
+                  <button className="w-full py-3 bg-primary text-white rounded-xl font-bold text-sm hover:bg-primary/90 transition-all shadow-lg shadow-primary/20">
                     Reschedule Call
                   </button>
                 </div>

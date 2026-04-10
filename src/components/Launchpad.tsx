@@ -211,7 +211,7 @@ export function Launchpad({ activeClient, isInline, onClose, onUpdateClient }: L
               <button 
                 onClick={startConnection}
                 disabled={isConnecting}
-                className="w-full py-4 bg-slate-900 text-white rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-slate-800 transition-all"
+                className="w-full py-4 bg-primary text-white rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-primary/90 transition-all shadow-lg shadow-primary/20"
               >
                 {isConnecting ? (
                   <>Connecting... <RefreshCw size={18} className="animate-spin" /></>
@@ -365,25 +365,25 @@ export function Launchpad({ activeClient, isInline, onClose, onUpdateClient }: L
           {/* Acceleration Panel (Only if not inline) */}
           {!isInline && (
             <div className="space-y-6">
-              <div className="bg-slate-900 rounded-[2.5rem] p-8 text-white shadow-xl relative overflow-hidden">
-              <div className="absolute top-0 right-0 p-8 opacity-10">
+              <div className="bg-primary rounded-[2.5rem] p-8 text-white shadow-xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 p-8 opacity-20">
                 <Zap size={120} />
               </div>
               <h3 className="text-xl font-bold mb-4 relative z-10">Campaign Accelerator</h3>
-              <p className="text-slate-400 text-sm mb-8 relative z-10">
+              <p className="text-purple-100 text-sm mb-8 relative z-10">
                 Your Launchpad configuration powers instant campaign deployment.
               </p>
               
               <div className="space-y-4 relative z-10">
-                <div className="p-4 bg-white/5 rounded-2xl border border-white/10">
-                  <div className="text-xs font-bold text-primary mb-1 uppercase tracking-wider">Smart Suggestion</div>
-                  <div className="text-sm font-medium">Based on your tracking setup, we recommend a <span className="text-primary">Retargeting Campaign</span>.</div>
+                <div className="p-4 bg-white/10 rounded-2xl border border-white/10">
+                  <div className="text-xs font-bold text-white mb-1 uppercase tracking-wider">Smart Suggestion</div>
+                  <div className="text-sm font-medium">Based on your tracking setup, we recommend a <span className="font-bold underline decoration-white/30 cursor-pointer">Retargeting Campaign</span>.</div>
                 </div>
                 
-                <div className="p-4 bg-white/5 rounded-2xl border border-white/10">
-                  <div className="text-xs font-bold text-emerald-400 mb-1 uppercase tracking-wider">Channel Status</div>
+                <div className="p-4 bg-white/10 rounded-2xl border border-white/10">
+                  <div className="text-xs font-bold text-emerald-300 mb-1 uppercase tracking-wider">Channel Status</div>
                   <div className="flex items-center gap-2 text-sm">
-                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                     Email & Social ready for launch
                   </div>
                 </div>
@@ -393,9 +393,9 @@ export function Launchpad({ activeClient, isInline, onClose, onUpdateClient }: L
                 disabled={status.score < 40}
                 className={cn(
                   "w-full mt-8 py-4 rounded-2xl font-bold flex items-center justify-center gap-2 transition-all",
-                  status.score >= 80 ? "bg-primary text-white hover:scale-[1.02] shadow-lg shadow-primary/20" : 
-                  status.score >= 40 ? "bg-white text-slate-900 hover:bg-slate-100" :
-                  "bg-slate-800 text-slate-500 cursor-not-allowed"
+                  status.score >= 80 ? "bg-white text-primary hover:scale-[1.02] shadow-lg shadow-white/10" : 
+                  status.score >= 40 ? "bg-white/20 text-white hover:bg-white/30 border border-white/20" :
+                  "bg-white/5 text-white/40 cursor-not-allowed border border-white/5"
                 )}
               >
                 {status.score >= 80 ? (
@@ -441,7 +441,7 @@ export function Launchpad({ activeClient, isInline, onClose, onUpdateClient }: L
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setActiveSetup(null)}
-              className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[100]"
+              className="fixed inset-0 bg-primary/20 backdrop-blur-md z-[100]"
             />
             <motion.div 
               initial={{ opacity: 0, scale: 0.9, y: 20 }}

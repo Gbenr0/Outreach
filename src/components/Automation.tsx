@@ -405,7 +405,7 @@ export function Automation({ activeClient }: AutomationProps) {
                     setView('builder');
                   }
                 }}
-                className="p-2.5 bg-purple-500 text-white rounded-full hover:bg-purple-600 transition-all shadow-lg shadow-purple-200"
+                className="p-2.5 bg-primary text-white rounded-full hover:bg-primary/90 transition-all shadow-lg shadow-primary/20"
               >
                 <Send size={18} />
               </button>

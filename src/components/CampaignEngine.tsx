@@ -93,7 +93,7 @@ type EmailSubTab = 'stats' | 'campaigns' | 'templates';
 
 export function CampaignEngine({ clients, activeClient, setActiveTab, setActiveClient, view, setView }: CampaignEngineProps) {
   const [activeMarketingTab, setActiveMarketingTab] = useState<MarketingTab>('social');
-  const [activeEmailSubTab, setActiveEmailSubTab] = useState<EmailSubTab>('campaigns');
+  const [activeEmailSubTab, setActiveEmailSubTab] = useState<EmailSubTab>('stats');
   const [filter, setFilter] = useState('all');
   const [statsCampaignFilter, setStatsCampaignFilter] = useState('all');
   const [showTemplateOverlay, setShowTemplateOverlay] = useState(false);
@@ -109,18 +109,14 @@ export function CampaignEngine({ clients, activeClient, setActiveTab, setActiveC
   };
 
   const handleCreateClick = () => {
-    if (!activeClient) {
-      toast.error('Please select a client first');
-      return;
-    }
-
-    if (launchpad.score < 40) {
-      setShowReadinessModal(true);
-    } else if (launchpad.score < 80) {
-      toast.warning('Your Launchpad is partially ready. Some features may be limited.');
-      setView('create');
-    } else {
-      setView('create');
+    setView('create');
+    
+    if (activeClient) {
+      if (launchpad.score < 40) {
+        setShowReadinessModal(true);
+      } else if (launchpad.score < 80) {
+        toast.warning('Your Launchpad is partially ready. Some features may be limited.');
+      }
     }
   };
   
@@ -167,15 +163,49 @@ export function CampaignEngine({ clients, activeClient, setActiveTab, setActiveC
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">
-            <div className="card bg-white space-y-6">
-              <div className="space-y-2">
-                <label className="text-sm font-semibold text-slate-700">Campaign Name</label>
-                <input 
-                  type="text" 
-                  defaultValue={activeClient ? `${activeClient.name} - ${activeClient.industry} Growth` : ''}
-                  placeholder="e.g., Summer Solstice Sale 2024"
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
-                />
+            <div key={activeClient?.id || 'new'} className="card bg-white space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-slate-700 flex items-center gap-2">
+                    Client Sub-Account
+                    {!activeClient && (
+                      <motion.span 
+                        animate={{ opacity: [0.4, 1, 0.4] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                        className="text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded-full uppercase tracking-wider"
+                      >
+                        Required
+                      </motion.span>
+                    )}
+                  </label>
+                  <select 
+                    value={activeClient?.id || ""}
+                    onChange={(e) => {
+                      const selected = clients.find(c => c.id === e.target.value);
+                      if (selected) setActiveClient(selected);
+                    }}
+                    className={cn(
+                      "w-full px-4 py-3 rounded-xl border outline-none transition-all",
+                      !activeClient 
+                        ? "border-primary bg-primary/5 ring-4 ring-primary/10 animate-pulse" 
+                        : "border-slate-200 focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                    )}
+                  >
+                    <option value="" disabled>Select a sub-account...</option>
+                    {clients.map(client => (
+                      <option key={client.id} value={client.id}>{client.name}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-slate-700">Campaign Name</label>
+                  <input 
+                    type="text" 
+                    defaultValue={activeClient ? `${activeClient.name} - ${activeClient.industry} Growth` : ''}
+                    placeholder="e.g., Summer Solstice Sale 2024"
+                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                  />
+                </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -418,7 +448,7 @@ export function CampaignEngine({ clients, activeClient, setActiveTab, setActiveC
                   </div>
                   <button 
                     onClick={handleCreateClick}
-                    className="btn-primary flex items-center gap-2"
+                    className="btn-primary"
                   >
                     <Plus size={18} />
                     New Email Campaign
@@ -671,7 +701,7 @@ export function CampaignEngine({ clients, activeClient, setActiveTab, setActiveC
                   <div className="relative">
                     <button 
                       onClick={() => setShowTemplateOverlay(!showTemplateOverlay)}
-                      className="btn-primary flex items-center gap-2"
+                      className="btn-primary"
                     >
                       <Plus size={18} />
                       New
@@ -837,7 +867,7 @@ export function CampaignEngine({ clients, activeClient, setActiveTab, setActiveC
                     toast.success('Template saved successfully!');
                     setShowBlankTemplateEditor(false);
                   }}
-                  className="btn-primary flex items-center gap-2"
+                  className="btn-primary"
                 >
                   <Save size={18} />
                   Save Template
@@ -1010,15 +1040,15 @@ export function CampaignEngine({ clients, activeClient, setActiveTab, setActiveC
                 toast.success('Quick Launch initiated! Using Launchpad defaults.');
                 setView('list');
               }}
-              className="px-4 py-2 bg-slate-900 text-white rounded-xl text-sm font-bold hover:bg-slate-800 transition-all flex items-center gap-2"
+              className="px-4 py-2 bg-primary text-white rounded-xl text-sm font-bold hover:bg-primary/90 transition-all flex items-center gap-2 shadow-lg shadow-primary/20"
             >
-              <Zap size={16} className="text-primary" />
+              <Zap size={16} className="text-purple-200" />
               Quick Launch
             </button>
           )}
           <button 
             onClick={handleCreateClick}
-            className="btn-primary flex items-center gap-2"
+            className="btn-primary"
           >
             <Plus size={18} />
             Launch Campaign
@@ -1055,7 +1085,7 @@ export function CampaignEngine({ clients, activeClient, setActiveTab, setActiveC
 
       <AnimatePresence>
         {showReadinessModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-primary/20 backdrop-blur-sm">
             <motion.div 
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -1125,7 +1155,7 @@ export function CampaignEngine({ clients, activeClient, setActiveTab, setActiveC
         )}
 
         {showLaunchpadDrawer && (
-          <div className="fixed inset-0 z-[60] flex justify-end bg-slate-900/40 backdrop-blur-sm">
+          <div className="fixed inset-0 z-[60] flex justify-end bg-primary/10 backdrop-blur-sm">
             <motion.div 
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
@@ -1151,7 +1181,7 @@ export function CampaignEngine({ clients, activeClient, setActiveTab, setActiveC
               <div className="p-6 border-t border-slate-100 bg-slate-50">
                 <button 
                   onClick={() => setShowLaunchpadDrawer(false)}
-                  className="w-full py-4 bg-slate-900 text-white rounded-2xl font-bold hover:bg-slate-800 transition-all"
+                  className="w-full py-4 bg-primary text-white rounded-2xl font-bold hover:bg-primary/90 transition-all shadow-lg shadow-primary/20"
                 >
                   Return to Campaign
                 </button>
@@ -1220,7 +1250,7 @@ function AdManagerView({ title, icon: Icon, description, data }: { title: string
       {activeSubTab === 'campaigns' ? (
         <>
           <div className="flex justify-end">
-            <button className="btn-primary flex items-center gap-2">
+            <button className="btn-primary">
               <Plus size={18} />
               Create Ad Campaign
             </button>
@@ -1299,7 +1329,7 @@ function MarketingModuleView({ title, icon: Icon, description, data }: { title: 
           <h3 className="text-xl font-bold">{title}</h3>
           <p className="text-sm text-slate-500">{description}</p>
         </div>
-        <button className="btn-primary flex items-center gap-2">
+        <button className="btn-primary">
           <Plus size={18} />
           Create New
         </button>
